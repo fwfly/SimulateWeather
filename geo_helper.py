@@ -29,24 +29,27 @@ class GeoHelper:
         #print self.img
         #print self.img_height, self.img_width
 
-    def get_elevation( self, lag, log ):
+    def get_elevation( self, lat, log ):
         '''
-        map lag and log into img position and get elevation from rgb
+        map lat and log into img position and get elevation from rgb
 
-        param lag : latitude from -90 to 90
-        type lag : Int
+        param lat : latitude from -90 to 90
+        type lat : Int
         param log : longitude from -180 to 180
         type log : Int
 
         return : meters of elevation
         '''
 
-        y = 90 - lag
+        y = 90 - lat
         x = 180 + log
         # change it into map position
         y = int((y/180) * self.img_height)
         x = int((x/360) * self.img_width)
         return ELE_PER_COLOR * self.img[y, x]
+
+    def get_geo_map(self):
+        return self.img
 
 
 if __name__ == '__main__':
