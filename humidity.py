@@ -1,6 +1,6 @@
 '''
 humidity :  compute adjust elevation  to check if there is sea.
-If adject item is sea humidity +10, if it is lend -3 with a randon base humidity
+If nearby item is sea humidity +10, if it is lend -3 with a randon base humidity
 '''
 
 from random import randint
@@ -28,6 +28,7 @@ def get_humidity(lat, log, geo_map):
     y = int((y/180) * height)
     x = int((x/360) * width)
 
+    # compute with nearby place status
     for iy in range(y-2, y+2):
         for ix in range(x-2, x+2):
             if geo_map[iy, ix] == 0:
