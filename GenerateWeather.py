@@ -1,3 +1,5 @@
+import sys
+
 import geo_helper
 import temperature
 import pressure
@@ -5,6 +7,43 @@ import humidity
 
 
 GEO_MAP = "elevation.bmp"
+
+
+def get_city_list( filename ):
+    '''
+    param filename: file name
+    type filename: String
+
+    return list of city
+    '''
+
+    # file format
+    # city|lat|log|time
+
+    city_list = []
+    with open(filename) as city_file:
+        read_data = city_file.readlines();
+        for data in read_data:
+            data = data.rstrip("\n")
+            city_info = data.split("|")
+            city, lat, log, city_time = city_info
+            lat = float(lat)
+            log = float(log)
+
+            # get month
+            time_list = city_time.split("-")
+            month = time_list[1]
+            month = int(month)
+
+            city_list.append([
+                city,
+                lat,
+                log,
+                city_time,
+                month
+            ])
+    return city_list
+
 
 
 def get_Weather(temp, humi):
@@ -20,35 +59,39 @@ def output( city, lat, log, ele, time, weather, temp, hPA, humidity ):
     #  output format "Sydney|-33.86,151.21,39|2015-12-23T05:02:12Z|Rain|+12.5|1004.3|97"
     print "%s|%f,%f,%d|%s|%s|%d|%d|%d"%( city, lat, log, ele, time, weather, temp, hPA, humidity )
 
-def main():
+def main( filename ):
     # init input data
+    city_list = get_city_list(filename)
 
-    city = "Sydney"
-    lat = -33.86
-    log = 151.21
-    time = "2015-12-23T05:02:12Z"
-    mouth = 7
+    for city in city_list:
 
-    # init elevation
-    geo = geo_helper.GeoHelper()
-    geo.read_map("elevation.bmp")
-    ele = geo.get_elevation(lat, log)
+        city_name,lat,log,time,month = city
 
-    # compute Temperature
-    temp = temperature.get_temp(lat, mouth, ele)
+        # init elevation
+        geo = geo_helper.GeoHelper()
+        geo.read_map("elevation.bmp")
+        ele = geo.get_elevation(lat, log)
 
-    # compute Pressure
-    hPa = pressure.get_pressure(ele)
+        # compute Temperature
+        temp = temperature.get_temp(lat, month, ele)
 
-    # compute humidity
-    humi = humidity.get_humidity(lat, log, geo.get_geo_map())
+        # compute Pressure
+        hPa = pressure.get_pressure(ele)
 
-    # compute weather status
-    weather = get_Weather(temp, humi)
+        # compute humidity
+        humi = humidity.get_humidity(lat, log, geo.get_geo_map())
 
-    output( city, lat, log, ele, time, weather, temp, hPa, humi)
+        # compute weather status
+        weather = get_Weather(temp, humi)
+
+        output( city_name, lat, log, ele, time, weather, temp, hPa, humi)
 
 
 if __name__ == '__main__':
 
-    main()
+    if len(sys.argv) < 2:
+        print "\nError: No input file"
+        print "Please enter cmd as below : "
+        print "    " + sys.argv[0] + " <file path/name>"
+
+    main( sys.argv[1] )
