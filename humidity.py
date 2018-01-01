@@ -19,6 +19,8 @@ def get_humidity(lat, log, geo_map):
     return humidity
     '''
 
+    # To make weather is more randon
+    # Random humidity for the location.
     humidity = randint(0, 100)
 
     height, width = geo_map.shape

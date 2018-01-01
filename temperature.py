@@ -1,22 +1,31 @@
 '''
   temperature.py is a module to compute temperature from time, elevation, latitude, longitude.
-'''
 
+  formula :
+    temperature = initial temperature of season - latitude effect - elevation effect
+
+'''
+# Assume -0.2 degree per every latitude
 TEMP_PER_LAT = 0.2
+
 ARCTIC_CIRCLE = 66.5
 ANTARCTIC_CICLE = -66.5
 TROPIC_OF_CANCER = 23.5
 TROPIC_OF_CAPRICORN = -23.5
 
+
+# Initial temperature in 4 season.
+# Every zones have their own initial temperature.
 SEASON_TEMP_OF_ARCTIC_CIRCLE = [10, 20, 10, 0]
 SEASON_TEMP_OF_TROPIC_OF_CANCER = [20, 30, 20, 15]
 SEASON_TEMP_OF_EQUATORIAL = [30, 30, 30, 30]
 SEASON_TEMP_OF_TROPIC_OF_CAPRICORN = [20, 15, 20, 30]
 SEASON_TEMP_OF_ANTARCTIC_CICLE = [10, 0, 10, 20]
 
-SEASON_OF_MOUTH = [None,3,3,0,0,0,1,1,1,2,2,2,3]
+# Index in zone initial temperature of every month
+SEASON_OF_MONTH = [None,3,3,0,0,0,1,1,1,2,2,2,3]
 
-def get_season_init_temp( lat, mouth ):
+def get_season_init_temp( lat, month ):
     '''
     get basic temperature from our season model and calculate with latitude
 
@@ -43,9 +52,11 @@ def get_season_init_temp( lat, mouth ):
             season = SEASON_TEMP_OF_TROPIC_OF_CAPRICORN
             tag_position = TROPIC_OF_CAPRICORN
 
-    temp_season = season[ SEASON_OF_MOUTH[mouth] ]
+    temp_season = season[ SEASON_OF_MONTH[month] ]
 
     dis_of_lat = abs(lat) - abs(tag_position)
+
+    # temperature = inital temperature - distance of zone * 0.2
     temp_season = temp_season - dis_of_lat * TEMP_PER_LAT # calculate with latitude
 
     return temp_season

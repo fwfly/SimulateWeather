@@ -1,5 +1,12 @@
+'''
+  formula :
+    Pressure = base pressure - elevation effect
+'''
 
+# Average pressure at 0 elevation
 BASE_PRESSURE = 1013
+
+# pressure is reduced 100 per increment of 900 meters
 REDUCE_PHA_PER_HEIGHT = 100
 
 def get_pressure(ele):

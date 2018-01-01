@@ -11,6 +11,8 @@ GEO_MAP = "elevation.bmp"
 
 def get_city_list( filename ):
     '''
+    Read city information from file
+
     param filename: file name
     type filename: String
 
@@ -47,6 +49,12 @@ def get_city_list( filename ):
 
 
 def get_Weather(temp, humi):
+    '''
+    Assume raining or snow when humidity is over 50%
+    If temperature is under 0, weather is snow.
+
+    '''
+
     if humi > 50:
         if temp < 0:
             return "Snow"
