@@ -9,7 +9,7 @@ import humidity
 GEO_MAP = "elevation.bmp"
 
 
-def get_city_list( filename ):
+def get_city_list(filename):
     '''
     Read city information from file
 
@@ -24,7 +24,7 @@ def get_city_list( filename ):
 
     city_list = []
     with open(filename) as city_file:
-        read_data = city_file.readlines();
+        read_data = city_file.readlines()
         for data in read_data:
             data = data.rstrip("\n")
             city_info = data.split("|")
@@ -48,7 +48,7 @@ def get_city_list( filename ):
 
 
 
-def get_Weather(temp, humi):
+def get_weather(temp, humi):
     '''
     Assume raining or snow when humidity is over 50%
     If temperature is under 0, weather is snow.
@@ -63,17 +63,17 @@ def get_Weather(temp, humi):
     return "Sunny"
 
 
-def output( city, lat, log, ele, time, weather, temp, hPA, humidity ):
+def output(city, lat, log, ele, time, weather, temp, h_pa, humi):
     #  output format "Sydney|-33.86,151.21,39|2015-12-23T05:02:12Z|Rain|+12.5|1004.3|97"
-    print "%s|%f,%f,%d|%s|%s|%d|%d|%d"%( city, lat, log, ele, time, weather, temp, hPA, humidity )
+    print "%s|%f,%f,%d|%s|%s|%d|%d|%d"%(city, lat, log, ele, time, weather, temp, h_pa, humi)
 
-def main( filename ):
+def main(filename):
     # init input data
     city_list = get_city_list(filename)
 
     for city in city_list:
 
-        city_name,lat,log,time,month = city
+        city_name, lat, log, time, month = city
 
         # init elevation
         geo = geo_helper.GeoHelper()
@@ -84,15 +84,15 @@ def main( filename ):
         temp = temperature.get_temp(lat, month, ele)
 
         # compute Pressure
-        hPa = pressure.get_pressure(ele)
+        h_pa = pressure.get_pressure(ele)
 
         # compute humidity
         humi = humidity.get_humidity(lat, log, geo.get_geo_map())
 
         # compute weather status
-        weather = get_Weather(temp, humi)
+        weather = get_weather(temp, humi)
 
-        output( city_name, lat, log, ele, time, weather, temp, hPa, humi)
+        output(city_name, lat, log, ele, time, weather, temp, h_pa, humi)
 
 
 if __name__ == '__main__':
@@ -102,4 +102,4 @@ if __name__ == '__main__':
         print "Please enter cmd as below : "
         print "    " + sys.argv[0] + " <file path/name>"
 
-    main( sys.argv[1] )
+    main(sys.argv[1])

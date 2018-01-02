@@ -8,7 +8,7 @@ import cv2
 
 ELE_PER_COLOR = 41.81 # 6900(height of Aconcagua)/165 (color on map)
 
-class GeoHelper:
+class GeoHelper(object):
 
     def __init__(self):
         self.img = None
@@ -16,7 +16,7 @@ class GeoHelper:
         self.img_width = 0
 
 
-    def read_map( self, bmp_file ):
+    def read_map(self, bmp_file):
         '''
         read a bmp file and store it into memory
 
@@ -29,7 +29,7 @@ class GeoHelper:
         #print self.img
         #print self.img_height, self.img_width
 
-    def get_elevation( self, lat, log ):
+    def get_elevation(self, lat, log):
         '''
         map lat and log into img position and get elevation from rgb
 
@@ -58,4 +58,4 @@ if __name__ == '__main__':
     #geo.read_map("fabkedata") # test fake data
     geo.read_map("elevation.bmp")
     print geo.get_elevation(-33.86, 151.21) # Sydney
-    print geo.get_elevation(-32.39,-70.0) # Aconcagua
+    print geo.get_elevation(-32.39, -70.0) # Aconcagua

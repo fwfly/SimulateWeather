@@ -20,7 +20,7 @@ def get_pressure(ele):
     return press hPa
     '''
 
-    return BASE_PRESSURE - ( ele/900 )*REDUCE_PHA_PER_HEIGHT
+    return BASE_PRESSURE - (ele/900) * REDUCE_PHA_PER_HEIGHT
 
 if __name__ == '__main__':
     print "Test Pressure"

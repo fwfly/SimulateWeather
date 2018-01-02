@@ -23,9 +23,9 @@ SEASON_TEMP_OF_TROPIC_OF_CAPRICORN = [20, 15, 20, 30]
 SEASON_TEMP_OF_ANTARCTIC_CICLE = [10, 0, 10, 20]
 
 # Index in zone initial temperature of every month
-SEASON_OF_MONTH = [None,3,3,0,0,0,1,1,1,2,2,2,3]
+SEASON_OF_MONTH = [None, 3, 3, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3]
 
-def get_season_init_temp( lat, month ):
+def get_season_init_temp(lat, month):
     '''
     get basic temperature from our season model and calculate with latitude
 
@@ -36,7 +36,7 @@ def get_season_init_temp( lat, month ):
     '''
 
     season = SEASON_TEMP_OF_EQUATORIAL
-    tag_position = 0
+    tag_position = 0.0
     if lat > 0:
         if lat >= ARCTIC_CIRCLE:
             season = SEASON_TEMP_OF_ARCTIC_CIRCLE
@@ -52,7 +52,7 @@ def get_season_init_temp( lat, month ):
             season = SEASON_TEMP_OF_TROPIC_OF_CAPRICORN
             tag_position = TROPIC_OF_CAPRICORN
 
-    temp_season = season[ SEASON_OF_MONTH[month] ]
+    temp_season = season[SEASON_OF_MONTH[month]]
 
     dis_of_lat = abs(lat) - abs(tag_position)
 
@@ -62,7 +62,7 @@ def get_season_init_temp( lat, month ):
     return temp_season
 
 
-def get_temp( lat, mouth, ele ):
+def get_temp(lat, mouth, ele):
     '''
     based on log, lat, time and ele and return a temperature
 
@@ -84,6 +84,6 @@ def get_temp( lat, mouth, ele ):
 if __name__ == '__main__':
     print get_season_init_temp(70, 12)
     print get_season_init_temp(-37.83, 12)
-    print get_temp(-37.83, 12, 41.81 )
+    print get_temp(-37.83, 12, 41.81)
 
 
