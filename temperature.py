@@ -2,9 +2,11 @@
   temperature.py is a module to compute temperature from time, elevation, latitude, longitude.
 
   formula :
-    temperature = initial temperature of season - latitude effect - elevation effect
+    temperature = initial temperature of season + randon effect(+- 3.0) - latitude effect - elevation effect
 
 '''
+import random
+
 # Assume -0.2 degree per every latitude
 TEMP_PER_LAT = 0.2
 
@@ -77,8 +79,11 @@ def get_temp(lat, mouth, ele):
     # pick a season model
     base_temp = get_season_init_temp(lat, mouth)
 
+    # Add random +-3 degree to create daily temperature
+    random_effect = round(random.uniform(-3.0, 3.0), 1)
+
     # -0.6 TEMP per 100m
-    temp = base_temp - (ele/100) * 0.6
+    temp = base_temp + random_effect - (ele/100) * 0.6
     return temp
 
 if __name__ == '__main__':
