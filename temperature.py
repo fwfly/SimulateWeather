@@ -27,6 +27,10 @@ SEASON_TEMP_OF_ANTARCTIC_CICLE = [10, 0, 10, 20]
 # Index in zone initial temperature of every month
 SEASON_OF_MONTH = [None, 3, 3, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3]
 
+# temperature change of every hour
+DAY_TEMP_CHANGE = [None, -1,-1,-1,-1,-1,-1,-1,0,1,2,3,4,5,5,5,5,4,3,2,1,0,0,0,0,0,-1 ]
+
+
 def get_season_init_temp(lat, month):
     '''
     get basic temperature from our season model and calculate with latitude
@@ -64,9 +68,23 @@ def get_season_init_temp(lat, month):
     return temp_season
 
 
-def get_temp(lat, mouth, ele):
+def get_temp_by_season_and_day(lat, month):
     '''
-    based on log, lat, time and ele and return a temperature
+    get temperature by lat and and daily effect
+
+    '''
+    # pick a season model
+    base_temp = get_season_init_temp(lat, month)
+
+    # Add random +-3 degree to create daily temperature
+    random_effect = round(random.uniform(-3.0, 3.0), 1)
+
+    return base_temp + random_effect
+
+
+def get_temp(base_temp, ele, hour):
+    '''
+    based on base temperature to calculate temperature for hour and elevation
 
     param lat : latitude from -90 to 90
     type lat : Int
@@ -76,22 +94,26 @@ def get_temp(lat, mouth, ele):
     type ele: Int
     '''
 
-    # pick a season model
-    base_temp = get_season_init_temp(lat, mouth)
-
-    # Add random +-3 degree to create daily temperature
-    random_effect = round(random.uniform(-3.0, 3.0), 1)
+    # Day/night effect
+    temp = base_temp + DAY_TEMP_CHANGE[hour]
 
     # -0.6 TEMP per 100m
-    temp = base_temp + random_effect - (ele/100) * 0.6
+    temp = temp - (ele/100) * 0.6
+
     return temp
 
 if __name__ == '__main__':
     print get_season_init_temp(70, 12)
     print get_season_init_temp(-37.83, 12)
-    print get_temp(-37.83, 12, 41.81)
+    print get_temp(get_temp_by_season_and_day(-37.83, 12), 41.81, 12)
 
     print "---Get 30 days temperature-----"
     for day in range(1, 30):
-        print get_temp(-37.83, 12, 41.81)
+        print get_temp(get_temp_by_season_and_day(-37.83, 12), 41.81, 12)
+
+    print "---Get 24 Hours temperature"
+
+    init_temp = get_temp_by_season_and_day(-37.83, 12)
+    for hour in range(1, 24):
+        print get_temp(init_temp, 41.81, hour)
 

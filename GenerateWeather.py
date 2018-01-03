@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 
 import geo_helper
 import temperature
@@ -33,16 +34,14 @@ def get_city_list(filename):
             log = float(log)
 
             # get month
-            time_list = city_time.split("-")
-            month = time_list[1]
-            month = int(month)
+            datetime_obj = datetime.strptime(city_time, '%Y-%m-%dT%H:%M:%SZ')
 
             city_list.append([
                 city,
                 lat,
                 log,
                 city_time,
-                month
+                datetime_obj
             ])
     return city_list
 
@@ -73,7 +72,7 @@ def main(filename):
 
     for city in city_list:
 
-        city_name, lat, log, time, month = city
+        city_name, lat, log, time, datetime_obj = city
 
         # init elevation
         geo = geo_helper.GeoHelper()
@@ -81,7 +80,8 @@ def main(filename):
         ele = geo.get_elevation(lat, log)
 
         # compute Temperature
-        temp = temperature.get_temp(lat, month, ele)
+        init_temp = temperature.get_temp_by_season_and_day(lat, datetime_obj.month)
+        temp = temperature.get_temp(init_temp, ele, datetime_obj.hour) # 7am has no temperature change
 
         # compute Pressure
         h_pa = pressure.get_pressure(ele)
