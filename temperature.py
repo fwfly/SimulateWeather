@@ -91,4 +91,7 @@ if __name__ == '__main__':
     print get_season_init_temp(-37.83, 12)
     print get_temp(-37.83, 12, 41.81)
 
+    print "---Get 30 days temperature-----"
+    for day in range(1, 30):
+        print get_temp(-37.83, 12, 41.81)
 
