@@ -86,6 +86,8 @@ def main(filename):
 
         # compute Temperature
         init_temp = 0
+
+        # It won't create new base temperature if the day of the city has been recorded.
         if city_id in cache_base_temp_of_city :
             init_temp = cache_base_temp_of_city[city_id]
         else:
