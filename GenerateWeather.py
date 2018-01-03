@@ -9,7 +9,6 @@ import humidity
 
 GEO_MAP = "elevation.bmp"
 
-
 def get_city_list(filename):
     '''
     Read city information from file
@@ -36,7 +35,10 @@ def get_city_list(filename):
             # get month
             datetime_obj = datetime.strptime(city_time, '%Y-%m-%dT%H:%M:%SZ')
 
+            city_id = city + "-" + str(datetime_obj.year) + "-" + str(datetime_obj.month) + '-' + str(datetime_obj.day)
+
             city_list.append([
+                city_id,
                 city,
                 lat,
                 log,
@@ -69,19 +71,28 @@ def output(city, lat, log, ele, time, weather, temp, h_pa, humi):
 def main(filename):
     # init input data
     city_list = get_city_list(filename)
+    cache_base_temp_of_city = {}
+
+    # Get geography info
+    geo = geo_helper.GeoHelper()
+    geo.read_map("elevation.bmp")
 
     for city in city_list:
 
-        city_name, lat, log, time, datetime_obj = city
+        city_id, city_name, lat, log, time, datetime_obj = city
 
         # init elevation
-        geo = geo_helper.GeoHelper()
-        geo.read_map("elevation.bmp")
         ele = geo.get_elevation(lat, log)
 
         # compute Temperature
-        init_temp = temperature.get_temp_by_season_and_day(lat, datetime_obj.month)
-        temp = temperature.get_temp(init_temp, ele, datetime_obj.hour) # 7am has no temperature change
+        init_temp = 0
+        if city_id in cache_base_temp_of_city :
+            init_temp = cache_base_temp_of_city[city_id]
+        else:
+            init_temp = temperature.get_temp_by_season_and_day(lat, datetime_obj.month)
+            cache_base_temp_of_city[city_id] = init_temp
+
+        temp = temperature.get_temp(init_temp, ele, datetime_obj.hour)
 
         # compute Pressure
         h_pa = pressure.get_pressure(ele)

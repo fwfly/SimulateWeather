@@ -28,7 +28,7 @@ SEASON_TEMP_OF_ANTARCTIC_CICLE = [10, 0, 10, 20]
 SEASON_OF_MONTH = [None, 3, 3, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3]
 
 # temperature change of every hour
-DAY_TEMP_CHANGE = [None, -1,-1,-1,-1,-1,-1,-1,0,1,2,3,4,5,5,5,5,4,3,2,1,0,0,0,0,0,-1 ]
+DAY_TEMP_CHANGE = [-1,-1,-1,-1,-1,-1,-1,0,1,2,3,4,5,5,5,5,4,3,2,1,0,0,0,0,0,-1 ]
 
 
 def get_season_init_temp(lat, month):
@@ -114,6 +114,6 @@ if __name__ == '__main__':
     print "---Get 24 Hours temperature"
 
     init_temp = get_temp_by_season_and_day(-37.83, 12)
-    for hour in range(1, 24):
+    for hour in range(0, 23):
         print get_temp(init_temp, 41.81, hour)
 
